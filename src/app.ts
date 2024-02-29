@@ -2,7 +2,9 @@ import "dotenv/config"
 import express, { json } from "express"
 import cors from "cors";
 import { mongoDB } from "./config/mongo.config";
-import { sequelize } from "./config/postgres.config";
+import { sequelizeConnection } from "./config/postgres.config";
+
+import './models/user'
 
 
 const PORT = process.env.PORT || 3000
@@ -13,7 +15,7 @@ app.use(json())
 
 const main = async () =>{
     try {
-        await sequelize.authenticate()
+        await sequelizeConnection.sync({force: false})
         console.log("Connection to Postgres Database is Ready")
         await mongoDB()
         console.log("Connection to Mongo Database is Ready")    
