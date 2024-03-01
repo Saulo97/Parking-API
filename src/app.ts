@@ -5,6 +5,7 @@ import { mongoDB } from "./config/mongo.config";
 import { sequelizeConnection } from "./config/postgres.config";
 
 import './models/user'
+import './models/parkingPlace'
 
 
 const PORT = process.env.PORT || 3000
