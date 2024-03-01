@@ -6,6 +6,7 @@ import { sequelizeConnection } from "./config/postgres.config";
 
 import './models/user'
 import './models/parkingPlace'
+import './models/booking'
 
 
 const PORT = process.env.PORT || 3000

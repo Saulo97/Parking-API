@@ -22,7 +22,8 @@ User.init({
     },
     email:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password:{
         type: DataTypes.STRING,
@@ -34,5 +35,6 @@ User.init({
     }
 },{
     timestamps: false,
-    sequelize: sequelizeConnection
+    sequelize: sequelizeConnection,
+    tableName: 'users'
 })

@@ -20,5 +20,6 @@ ParkingPlace.init({
     }
 },{
     timestamps: false,
-    sequelize: sequelizeConnection
+    sequelize: sequelizeConnection,
+    tableName: 'places'
 })
