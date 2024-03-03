@@ -23,9 +23,6 @@ export const createUser = async (user: UserInput): Promise<User | null> =>{
         if(existUser){
             throw Error("ERROR_USER_ALREADY_EXISTS")
         }
-        if(!user.rol){
-            user.rol = Roles.client
-        }
         const response = await User.create(user)
         return response
     } catch (error) {
