@@ -5,7 +5,7 @@ export const userRoutes = Router()
 
 userRoutes
         .get("/users", getAll)
-        .post("users", postOne)
+        .post("/users", postOne)
         .put("/users/:id", updateOne)
         .delete("/users/:id", deleteOne)
         .get("/users/:id", getOneById)

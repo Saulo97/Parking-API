@@ -5,7 +5,7 @@ import { Roles, UserInput } from "../interfaces/user.interface";
 export const getAll = async (_req: Request, res: Response): Promise<void> => {
     try {
         const response = await getUsers()
-        res.sendStatus(200).send(response)
+        res.sendStatus(200).json(response)
     } catch (error:any) {
         res.sendStatus(400).json({data:error?.message ||  error})
     }
@@ -15,7 +15,7 @@ export const getOneById = async (req: Request, res: Response): Promise<void> => 
         const id = +req.params.id
         if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
         const response = await getUser(id)
-        res.sendStatus(200).send(response)       
+        res.sendStatus(200).json(response)       
     }catch(error: any){
         res.sendStatus(404).json({data: error?.message || error})
     }
@@ -30,7 +30,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
             rol: rol? rol: Roles.client
         }
         const response = await createUser(newUser)
-        res.sendStatus(201).send(response)
+        res.sendStatus(201).json(response)
     }catch(error:any){
         res.sendStatus(403).json({data: error?.message || error})
     }
@@ -47,7 +47,7 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
             rol: rol? rol: Roles.client
         }
         const response = await updateUser(id, newUser)
-        res.sendStatus(201).send(response)
+        res.sendStatus(201).json(response)
     } catch (error:any){
         res.sendStatus(403).json({data: error?.message || error})
     }
