@@ -1,4 +1,4 @@
-import { Roles, UserInput, UserOutput } from "../interfaces/user.interface"
+import {UserInput} from "../interfaces/user.interface"
 import { User } from "../models/user"
 import { ErrorResponse } from '../interfaces/errorResponse.interface';
 
