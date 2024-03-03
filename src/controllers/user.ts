@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, getUser, getUsers } from "../services/user";
+import { createUser, deleteUser, getUser, getUsers, updateUser } from "../services/user";
 import { Roles, UserInput } from "../interfaces/user.interface";
 
 export const getAll = async (_req: Request, res: Response): Promise<void> => {
@@ -35,5 +35,30 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
         res.sendStatus(403).json({data: error?.message || error})
     }
 }
-export const updateOne = async (req: Request, res: Response): Promise<void> => {}
-export const deleteOne = async (req: Request, res: Response): Promise<void> => {}
+export const updateOne = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = +req.params.id
+        if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
+        const {name, email, password, rol} = req.body
+        const newUser: UserInput = {
+            name: name,
+            email: email,
+            password: password, 
+            rol: rol? rol: Roles.client
+        }
+        const response = await updateUser(id, newUser)
+        res.sendStatus(201).send(response)
+    } catch (error:any){
+        res.sendStatus(403).json({data: error?.message || error})
+    }
+}
+export const deleteOne = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = +req.params.id
+        if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
+        await deleteUser(id)
+        res.sendStatus(200).json({data:"USER_DELETED_SUCCESSFULY"})
+    } catch (error: any) {
+        res.sendStatus(403).json({data: error?.message || error})
+    }
+}
