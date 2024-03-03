@@ -3,7 +3,7 @@ import express, { json } from "express"
 import cors from "cors";
 import { mongoDB } from "./config/mongo.config";
 import { sequelizeConnection } from "./config/postgres.config";
-
+import { router } from "./routes";
 import './models/user'
 import './models/parkingPlace'
 import './models/booking'
@@ -14,6 +14,7 @@ const app = express()
 
 app.use(cors())
 app.use(json())
+app.use(router)
 
 const main = async () =>{
     try {
