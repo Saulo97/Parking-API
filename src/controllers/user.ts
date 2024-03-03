@@ -14,7 +14,7 @@ export const getAll = async (_req: Request, res: Response): Promise<void> => {
 export const getOneById = async (req: Request, res: Response): Promise<void> => {
     try{
         const id = +req.params.id
-        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
+        if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         const response = await getUser(id)
         res.status(200).json(response)       
     }catch(error:any) {
@@ -39,7 +39,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
 export const updateOne = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = +req.params.id
-        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
+        if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         const {name, email, password, rol} = req.body
         const newUser: UserInput = {
             name: name,
@@ -56,7 +56,7 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
 export const deleteOne = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = +req.params.id
-        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
+        if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         await deleteUser(id)
         res.status(200).json({data:"USER_DELETED_SUCCESSFULY"})
     } catch (error:any) {
