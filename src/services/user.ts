@@ -19,6 +19,10 @@ export const getUser = async (id:number): Promise<User | null> =>{
 }
 export const createUser = async (user: UserInput): Promise<User | null> =>{
     try {
+        const existUser = await User.findOne({where: {email : user.email}})
+        if(existUser){
+            throw Error("ERROR_USER_ALREADY_EXISTS")
+        }
         const response = await User.create(user)
         return response
     } catch (error) {
