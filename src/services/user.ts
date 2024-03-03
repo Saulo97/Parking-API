@@ -1,39 +1,53 @@
 import { Roles, UserInput, UserOutput } from "../interfaces/user.interface"
 import { User } from "../models/user"
+import { ErrorResponse } from '../interfaces/errorResponse.interface';
 
 export const getUsers = async ():Promise<User[]>  =>{
     try {
         const response = await User.findAll()
+        if(!response || response === null || response === undefined ){
+            const errorResponse : ErrorResponse = {status: 404, message: "Users Not Found"}
+            throw errorResponse
+        }
         return response
-    } catch (error) {
-        throw Error("ERROR_GET_ITEMS")
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
     }
 }
 export const getUser = async (id:number): Promise<User | null> =>{
     try {
         const response = await User.findByPk(id)
+        if(!response || response === null || response === undefined){
+            const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
+            throw errorResponse
+        }
         return response
-    } catch (error) {
-        throw Error("ERROR_ITEM_NOT_FOUND")
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
     }
 }
 export const createUser = async (user: UserInput): Promise<User | null> =>{
     try {
         const existUser = await User.findOne({where: {email : user.email}})
         if(existUser){
-            throw Error("ERROR_USER_ALREADY_EXISTS")
+            const errorResponse : ErrorResponse = {status: 400, message: "Email Is Already Exist"}
+            throw errorResponse
         }
         const response = await User.create(user)
         return response
-    } catch (error) {
-        throw Error("ERROR_ITEM_NOT_CREATED")
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
     }
 }
 export const updateUser = async (id: number, user: UserInput): Promise<User| null> =>{
     try {
         const foundUser = await User.findByPk(id)
         if(!foundUser){
-            throw Error("ERROR_ITEM_NOT_FOUND")  
+            const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
+            throw errorResponse 
         }else{
             foundUser.name = user.name ?? foundUser.name
             foundUser.email = user.email ?? foundUser.email
@@ -42,19 +56,22 @@ export const updateUser = async (id: number, user: UserInput): Promise<User| nul
             await foundUser.save()
             return foundUser
         }
-    } catch (error) {
-        throw Error("ERROR_ITEM_NOT_UPDATE")
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
     }
 }
 export const deleteUser = async (id: number): Promise<void> =>{
     try {
         const foundUser = await User.findByPk(id)
         if(!foundUser){
-            throw Error("ITEM_NOT_FOUND")
+            const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
+            throw errorResponse
         }else{
             await User.destroy({where: {id: id}})           
         }
-    } catch (error) {
-        throw Error("ERROR_ITEM_NOT_UPDATE")
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
     }
 }
