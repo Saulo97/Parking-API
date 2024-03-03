@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { createUser, deleteUser, getUser, getUsers, updateUser } from "../services/user";
 import { Roles, UserInput } from "../interfaces/user.interface";
 import { handleError } from "../utils/error.handle";
-import { ErrorResponse } from "../interfaces/errorResponse.interface";
 
 export const getAll = async (_req: Request, res: Response): Promise<void> => {
     try {
@@ -15,7 +14,7 @@ export const getAll = async (_req: Request, res: Response): Promise<void> => {
 export const getOneById = async (req: Request, res: Response): Promise<void> => {
     try{
         const id = +req.params.id
-        if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
+        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
         const response = await getUser(id)
         res.status(200).json(response)       
     }catch(error:any) {
@@ -40,7 +39,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
 export const updateOne = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = +req.params.id
-        if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
+        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
         const {name, email, password, rol} = req.body
         const newUser: UserInput = {
             name: name,
@@ -57,7 +56,7 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
 export const deleteOne = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = +req.params.id
-        if(!id) res.sendStatus(404).json({data: "ID_PARAMS_NOT_FOUND"})
+        if(!id || typeof id !== "number" ) handleError(res, 400, "Error In Param Id ")
         await deleteUser(id)
         res.status(200).json({data:"USER_DELETED_SUCCESSFULY"})
     } catch (error:any) {
