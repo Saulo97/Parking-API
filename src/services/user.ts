@@ -1,4 +1,4 @@
-import { UserInput } from "../interfaces/user.interface"
+import { Roles, UserInput } from "../interfaces/user.interface"
 import { User } from "../models/user"
 
 export const getUsers = async ():Promise<User[]>  =>{
@@ -22,6 +22,9 @@ export const createUser = async (user: UserInput): Promise<User | null> =>{
         const existUser = await User.findOne({where: {email : user.email}})
         if(existUser){
             throw Error("ERROR_USER_ALREADY_EXISTS")
+        }
+        if(!user.rol){
+            user.rol = Roles.client
         }
         const response = await User.create(user)
         return response
