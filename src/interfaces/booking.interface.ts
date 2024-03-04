@@ -5,7 +5,7 @@ export interface BookingInterface {
     dateStart: string,
     dateEnd: string,
     userId?: number,
-    placeId?: number,
+    placeId?: number
     createdAt?: string,
     updatedAt?: string,
     isDeleted?: boolean
