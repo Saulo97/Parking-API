@@ -4,22 +4,22 @@ import { validateResult } from "../utils/validateResult";
 
 export const createBookingValidator = [
     check('dateStart')
-        .optional()
+        .exists()
         .trim()
         .notEmpty()
         .isDate(),
     check('dateEnd')
-        .optional()
+        .exists()
         .trim()
         .notEmpty()
         .isDate(),
     check('userId')
-        .optional()
+        .exists()
         .trim()
         .notEmpty()
         .isNumeric(),
     check('placeId')
-        .optional()
+        .exists()
         .trim()
         .notEmpty()
         .isNumeric(),
