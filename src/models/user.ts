@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { Roles, UserInput, UserInterface } from '../interfaces/user.interface';
 import { sequelizeConnection } from '../config/postgres.config';
+import { Booking } from "./booking";
 
 export class User extends Model<UserInterface,UserInput> implements UserInterface {
     public id!: number;
@@ -37,4 +38,14 @@ User.init({
     timestamps: false,
     sequelize: sequelizeConnection,
     tableName: 'users'
+})
+
+User.hasMany(Booking,{
+    foreignKey:'userId',
+    sourceKey: 'id'
+})
+
+Booking.belongsTo(User,{
+    foreignKey: 'userId',
+    targetKey: 'id'
 })

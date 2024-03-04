@@ -6,8 +6,8 @@ export class Booking extends Model<BookingInterface, BookingInput> implements Bo
     id!: number;
     dateStart!: string;
     dateEnd!: string;
-    userId?: number | undefined;
-    placeId?: number | undefined;
+    userId: number | undefined;
+    placeId: number | undefined;
     createdAt?: string | undefined;
     updatedAt?: string | undefined;
     isDeleted?: boolean | undefined;
@@ -35,3 +35,7 @@ Booking.init({
     sequelize: sequelizeConnection,
     tableName: 'bookings'
 })
+
+
+
+
