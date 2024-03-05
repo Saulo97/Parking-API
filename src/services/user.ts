@@ -61,14 +61,20 @@ export const updateUser = async (id: number, user: UserInput): Promise<User| nul
         throw errorResponse
     }
 }
-export const deleteUser = async (id: number): Promise<void> =>{
+export const deleteUser = async (id: number): Promise<User> =>{
     try {
         const foundUser = await User.findByPk(id)
         if(!foundUser){
             const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
             throw errorResponse
+        }if(foundUser.isDeleted == true){
+            const errorResponse : ErrorResponse = {status: 404, message: "This User is not exist"}
+            throw errorResponse
         }else{
-            await User.destroy({where: {id: id}})           
+            foundUser.isDeleted = true
+            await foundUser.save()
+            return foundUser
+            // await User.destroy({where: {id: id}})           
         }
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
