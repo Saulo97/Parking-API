@@ -9,7 +9,7 @@ export class User extends Model<UserInterface,UserInput> implements UserInterfac
     public email!: string;
     public password!: string;
     public rol!: Roles;
-    public isActive!: boolean;
+    public isDeleted!: boolean;
 }
 
 User.init({
@@ -35,7 +35,7 @@ User.init({
         type: DataTypes.ENUM('admin','employee','client'),
         allowNull: false
     },
-    isActive: {
+    isDeleted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false

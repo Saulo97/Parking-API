@@ -12,8 +12,8 @@ export interface UserInterface {
     email: string,
     password: string,
     rol: Roles,
-    isActive: boolean
+    isDeleted: boolean
 }
 
-export interface UserInput extends Optional<UserInterface, 'id' | 'isActive'> {}
+export interface UserInput extends Optional<UserInterface, 'id' | 'isDeleted'> {}
 export interface UserOutput extends Required<UserInterface>{}
