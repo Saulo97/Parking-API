@@ -63,14 +63,20 @@ export const updateBooking = async (id: number, booking: BookingInput): Promise<
         throw errorResponse
     }
 }
-export const deleteBooking = async (id: number): Promise<void> =>{
+export const deleteBooking = async (id: number): Promise<Booking> =>{
     try {
         const foundUser = await Booking.findByPk(id)
         if(!foundUser){
             const errorResponse : ErrorResponse = {status: 404, message: "Booking Not Found By Id"}
             throw errorResponse
+        }if(foundUser.isDeleted == true){
+            const errorResponse : ErrorResponse = {status: 404, message: "This Booking is not exist"}
+            throw errorResponse
         }else{
-            await User.destroy({where: {id: id}})           
+            foundUser.isDeleted = true
+            await foundUser.save()
+            return foundUser
+            // await User.destroy({where: {id: id}})           
         }
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}

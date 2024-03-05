@@ -57,8 +57,8 @@ export const deleteOne = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = +req.params.id
         if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
-        await deleteBooking(id)
-        res.status(200).json({data:"BOOKING_DELETED_SUCCESSFULY"})
+        const response = await deleteBooking(id)
+        res.status(200).json(response)
     } catch (error:any) {
         handleError(res, error.status, error.message)
     }
