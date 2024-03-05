@@ -1,4 +1,3 @@
-import {UserInput} from "../interfaces/user.interface"
 import { User } from "../models/user"
 import { ErrorResponse } from '../interfaces/errorResponse.interface';
 import { Booking } from "../models/booking";

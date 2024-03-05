@@ -9,6 +9,7 @@ export class User extends Model<UserInterface,UserInput> implements UserInterfac
     public email!: string;
     public password!: string;
     public rol!: Roles;
+    public isActive!: boolean;
 }
 
 User.init({
@@ -33,6 +34,11 @@ User.init({
     rol:{
         type: DataTypes.ENUM('admin','employee','client'),
         allowNull: false
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 },{
     timestamps: false,
