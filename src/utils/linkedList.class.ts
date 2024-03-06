@@ -28,7 +28,7 @@ export class LinkedList<Booking> {
     traverse(callback: any){
         let current = this.head
         while(current !== null){
-            callback(current)
+            callback(current.value, current.next)
             current = current.next
         }
     }
