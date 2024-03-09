@@ -18,7 +18,7 @@ app.use(router)
 
 const main = async () =>{
     try {
-        await sequelizeConnection.sync({force: false})
+        await sequelizeConnection.sync({force: false, alter:true})
         console.log("Connection to Postgres Database is Ready")
         await mongoDB()
         console.log("Connection to Mongo Database is Ready")    

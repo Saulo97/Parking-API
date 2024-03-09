@@ -1,7 +1,10 @@
 import { User } from "../models/user"
 import { ErrorResponse } from '../interfaces/errorResponse.interface';
-import { Booking } from "../models/booking";
+import { Booking } from '../models/booking';
 import { BookingInput } from "../interfaces/booking.interface";
+import { LinkedList, Node } from "../utils/linkedList.class";
+import { ParkingPlace } from "../models/parkingPlace";
+import { Response, response } from 'express';
 
 export const getBookings = async ():Promise<Booking[]>  =>{
     try {
@@ -10,6 +13,14 @@ export const getBookings = async ():Promise<Booking[]>  =>{
             const errorResponse : ErrorResponse = {status: 404, message: "Bookings Not Found"}
             throw errorResponse
         }
+        //Aqui se recogen las reservas de la base de datos y se guardan en una linked list
+        // const linkedList = new LinkedList()
+        // response.map((item)=>{
+        //     linkedList.append(item)
+        //     return item
+        // })
+        // const print = (node:any) =>{console.log(`Valor: ${node.value.id} || Next: ${node.next?.value.id}`)}
+        // linkedList.traverse(print)
         return response
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
@@ -31,13 +42,18 @@ export const getBooking = async (id:number): Promise<Booking | null> =>{
 }
 export const createBooking = async (booking: BookingInput): Promise<Booking | null> =>{
     try {
-        // const existUser = await User.findOne({where: {email : user.email}})
-        // if(existUser){
-        //     const errorResponse : ErrorResponse = {status: 400, message: "Email Is Already Exist"}
-        //     throw errorResponse
-        // }
-        const response = await Booking.create(booking)
-        return response
+        const parkingPlaces = await ParkingPlace.findAll()
+        //Si no existen parking places lanzar un error
+        const parkingsFree = await searchParking(parkingPlaces, booking)
+        if(parkingsFree.length == 0 ){
+            const errorResponse : ErrorResponse = {status: 404, message: "No available parking has been found for these hours"}
+            throw errorResponse 
+        }else{
+            const place = await parkingsFree.shift()
+            booking.placeId = place?.id
+            const response = await Booking.create(booking)
+            return response
+        }
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
         throw errorResponse
@@ -81,5 +97,67 @@ export const deleteBooking = async (id: number): Promise<Booking> =>{
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
         throw errorResponse
+    }
+}
+
+const searchParking = async(places: ParkingPlace[], newBooking: BookingInput): Promise<ParkingPlace[]>=>{  
+    let freePlaces: ParkingPlace[] = []
+    for(let place of places ){
+        const bookingsList: Booking[] = await findBookingByPlace(place)
+        if(bookingsList.length === 0){
+            // freePlaces.push(place)
+            freePlaces.push(place)
+            break
+        }else{
+            const targetBookings = getNearbyBookings(bookingsList, newBooking)
+            
+            if(targetBookings.length === 0) {
+                freePlaces.push(place)
+                break
+            }else{
+                const linkedList = new LinkedList()
+                targetBookings.forEach((booking: Booking)=>{
+                    linkedList.append(booking)
+                })
+                if(linkedList.head?.value.dateStart! > newBooking.dateEnd){
+                    freePlaces.push(place)
+                    break
+                }else if(linkedList.tail?.value.dateEnd! < newBooking.dateStart){
+                    freePlaces.push(place)
+                    break
+                }else if(linkedList.isAvailable(newBooking)){
+                    freePlaces.push(place)
+                    break
+                }else{
+                }
+            }
+        }
+    }
+    return freePlaces
+}
+
+const getDayOfDate = (date: string) => {
+    const day =date.toString().trim().split('T').shift()
+    return day
+}
+
+const getNearbyBookings = (bookingList : Booking[], targetBooking: BookingInput): Booking[]=>{
+    const targetBookings = bookingList.filter((booking: Booking)=>{
+        if(getDayOfDate(booking.dateStart)==getDayOfDate(targetBooking.dateStart) ||getDayOfDate(booking.dateEnd)==getDayOfDate(targetBooking.dateEnd) ){
+            return booking
+        }else{
+            return
+        }
+    })
+    return targetBookings
+}
+
+const findBookingByPlace = async( place: ParkingPlace ): Promise<Booking[]> => {
+    try {
+        const bookings = await Booking.findAll({where:{placeId: place.id, isDeleted: false}})
+        return bookings
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse 
     }
 }

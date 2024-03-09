@@ -20,11 +20,11 @@ Booking.init({
         primaryKey: true
     },
     dateStart:{
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false
     },
     dateEnd:{
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false
     },
     isDeleted:{
