@@ -1,10 +1,9 @@
-import { User } from "../models/user"
 import { ErrorResponse } from '../interfaces/errorResponse.interface';
 import { Booking } from '../models/booking';
 import { BookingInput } from "../interfaces/booking.interface";
-import { LinkedList, Node } from "../utils/linkedList.class";
+import { LinkedList} from "../utils/linkedList.class";
 import { ParkingPlace } from "../models/parkingPlace";
-import { Response, response } from 'express';
+import { getNearbyBookings } from '../utils/getNearbyBookings';
 
 export const getBookings = async ():Promise<Booking[]>  =>{
     try {
@@ -136,25 +135,22 @@ const searchParking = async(places: ParkingPlace[], newBooking: BookingInput): P
     return freePlaces
 }
 
-const getDayOfDate = (date: string) => {
-    const day =date.toString().trim().split('T').shift()
-    return day
-}
 
-const getNearbyBookings = (bookingList : Booking[], targetBooking: BookingInput): Booking[]=>{
-    const targetBookings = bookingList.filter((booking: Booking)=>{
-        if(getDayOfDate(booking.dateStart)==getDayOfDate(targetBooking.dateStart) ||getDayOfDate(booking.dateEnd)==getDayOfDate(targetBooking.dateEnd) ){
-            return booking
-        }else{
-            return
-        }
-    })
-    return targetBookings
-}
 
-const findBookingByPlace = async( place: ParkingPlace ): Promise<Booking[]> => {
+// const getNearbyBookings = (bookingList : Booking[], targetBooking: BookingInput): Booking[]=>{
+//     const targetBookings = bookingList.filter((booking: Booking)=>{
+//         if(getDayOfDate(booking.dateStart)==getDayOfDate(targetBooking.dateStart) ||getDayOfDate(booking.dateEnd)==getDayOfDate(targetBooking.dateEnd) ){
+//             return booking
+//         }else{
+//             return
+//         }
+//     })
+//     return targetBookings
+// }
+
+export const findBookingByPlace = async( place: ParkingPlace ): Promise<Booking[]> => {
     try {
-        const bookings = await Booking.findAll({where:{placeId: place.id, isDeleted: false}})
+        const bookings = await Booking.findAll({where:{placeId: place.id, isDeleted: false}, order: [['dateStart', 'ASC']]})
         return bookings
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
