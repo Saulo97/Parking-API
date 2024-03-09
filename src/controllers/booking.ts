@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { handleError } from "../utils/error.handle";
-import { createBooking, deleteBooking, getBooking, getBookings, updateBooking } from "../services/booking";
+import { createBooking, deleteBooking, getBooking, getBookings, getCurrentAvailable, updateBooking } from "../services/booking";
 import { BookingInput } from "../interfaces/booking.interface";
 
 export const getAll = async (_req: Request, res: Response): Promise<void> => {
@@ -21,6 +21,15 @@ export const getOneById = async (req: Request, res: Response): Promise<void> => 
         handleError(res, error.status, error.message)
     }
 }
+export const getAllOcupation = async (req: Request, res: Response): Promise<void> => {
+    try{
+        const response = await getCurrentAvailable()
+        res.status(200).json(response)       
+    }catch(error:any) {
+        handleError(res, error.status, error.message)
+    }
+}
+
 export const postOne = async (req: Request, res: Response): Promise<void> => {
     try{
         const {dateStart, dateEnd, userId, placeId} = req.body

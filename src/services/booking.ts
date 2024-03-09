@@ -5,6 +5,8 @@ import { LinkedList} from "../utils/linkedList.class";
 import { ParkingPlace } from "../models/parkingPlace";
 import { getNearbyBookings } from '../utils/getNearbyBookings';
 import { searchParking } from '../utils/searchParking';
+import { Op } from 'sequelize';
+import { formatDate } from '../validators/createBookingValidator';
 
 export const getBookings = async ():Promise<Booking[]>  =>{
     try {
@@ -94,6 +96,17 @@ export const deleteBooking = async (id: number): Promise<Booking> =>{
             return foundUser
             // await User.destroy({where: {id: id}})           
         }
+    } catch (error: any) {
+        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+        throw errorResponse
+    }
+}
+
+export const getCurrentAvailable = async (): Promise<Booking[] > =>{
+    try {
+        const now = formatDate(new Date())
+        const bookings = await Booking.findAll({where: {dateStart:{[Op.lte]: now}, dateEnd:{[Op.gte]: now}, isDeleted:false}})
+        return bookings
     } catch (error: any) {
         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
         throw errorResponse
