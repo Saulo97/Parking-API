@@ -4,6 +4,7 @@ import { createBooking, deleteBooking, getBooking, getBookings, getCurrentAvaila
 import { BookingInput } from "../interfaces/booking.interface";
 import { User } from "../models/user";
 import { where } from "sequelize";
+import { createLog } from "../services/log";
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -44,6 +45,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
             placeId: placeId
         }
         const response = await createBooking(newBooking)
+        await createLog(`The user with email ${email} has created a new Booking with start date: ${dateStart}, and end date: ${dateEnd}`)
         res.status(201).json(response)
     }catch(error:any) {
         handleError(res, error.status, error.message)
