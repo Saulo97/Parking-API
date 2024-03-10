@@ -33,7 +33,7 @@ export const createBookingValidator = [
             }
         }),
     check('userId')
-        .exists()
+        .optional()
         .trim()
         .notEmpty()
         .isNumeric(),

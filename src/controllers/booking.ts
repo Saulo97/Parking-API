@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import { handleError } from "../utils/error.handle";
 import { createBooking, deleteBooking, getBooking, getBookings, getCurrentAvailable, updateBooking } from "../services/booking";
 import { BookingInput } from "../interfaces/booking.interface";
+import { User } from "../models/user";
+import { where } from "sequelize";
 
-export const getAll = async (_req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
     try {
         const response = await getBookings()
         res.status(200).json(response)
@@ -32,11 +34,13 @@ export const getAllOcupation = async (req: Request, res: Response): Promise<void
 
 export const postOne = async (req: Request, res: Response): Promise<void> => {
     try{
-        const {dateStart, dateEnd, userId, placeId} = req.body
+        const {email} = req.body.user
+        const user = await User.findOne({where:{email : email}})
+        const {dateStart, dateEnd,  placeId} = req.body
         const newBooking: BookingInput = {
             dateStart: dateStart,
             dateEnd: dateEnd,
-            userId: userId,
+            userId: user?.id,
             placeId: placeId
         }
         const response = await createBooking(newBooking)
