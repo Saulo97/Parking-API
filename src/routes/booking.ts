@@ -12,6 +12,6 @@ bookingRouter
         .get("/bookings", authorize,isAdminOrEmployee,getAll)
         .post("/bookings", authorize,createBookingValidator,postOne)
         .put("/bookings/:id", authorize, isAdminOrEmployee,updateBookingValidator,updateOne)
-        .delete("/bookings/:id", authorize, isAdminOrEmployee,deleteOne)
+        .delete("/bookings/:id", authorize,deleteOne)
         .get("/bookings/ocupation", authorize,isAdminOrEmployee,getAllOcupation)
         .get("/bookings/:id", authorize,getOneById)

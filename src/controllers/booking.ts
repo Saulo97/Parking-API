@@ -45,7 +45,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
             placeId: placeId
         }
         const response = await createBooking(newBooking)
-        await createLog(`The user with email ${email} has created a new Booking with start date: ${dateStart}, and end date: ${dateEnd}`)
+        await createLog(`The user with email ${email} has created a new Booking with Id: ${response?.id} ,start date: ${dateStart}, and end date: ${dateEnd}`)
         res.status(201).json(response)
     }catch(error:any) {
         handleError(res, error.status, error.message)
@@ -53,6 +53,7 @@ export const postOne = async (req: Request, res: Response): Promise<void> => {
 }
 export const updateOne = async (req: Request, res: Response): Promise<void> => {
     try {
+        const {email} = req.body.user
         const id = +req.params.id
         if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         const {dateStart, dateEnd, userId, placeId} = req.body
@@ -63,6 +64,7 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
             placeId: placeId
         }
         const response = await updateBooking(id,newBooking)
+        await createLog(`The user with email ${email} has updated a Booking with Id: ${response?.id} ,start date: ${dateStart}, and end date: ${dateEnd}`)
         res.status(201).json(response)
     } catch (error:any) {
         handleError(res, error.status, error.message)
@@ -70,9 +72,11 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
 }
 export const deleteOne = async (req: Request, res: Response): Promise<void> => {
     try {
+        const {email} = req.body.user
         const id = +req.params.id
         if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         const response = await deleteBooking(id)
+        await createLog(`The user with email ${email} has deleted a Booking with Id: ${response.id} ,start date: ${response.dateStart}, and end date: ${response.dateEnd}`)
         res.status(200).json(response)
     } catch (error:any) {
         handleError(res, error.status, error.message)
