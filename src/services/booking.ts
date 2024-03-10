@@ -10,7 +10,7 @@ import { formatDate } from '../validators/createBookingValidator';
 
 export const getBookings = async ():Promise<Booking[]>  =>{
     try {
-        const response = await Booking.findAll()
+        const response = await Booking.findAll({where:{isDeleted: false}})
         if(!response || response === null || response === undefined ){
             const errorResponse : ErrorResponse = {status: 404, message: "Bookings Not Found"}
             throw errorResponse

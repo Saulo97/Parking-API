@@ -4,7 +4,7 @@ import { ErrorResponse } from '../interfaces/errorResponse.interface';
 
 export const getUsers = async ():Promise<User[]>  =>{
     try {
-        const response = await User.findAll()
+        const response = await User.findAll({where:{isDeleted: false}})
         if(!response || response === null || response === undefined ){
             const errorResponse : ErrorResponse = {status: 404, message: "Users Not Found"}
             throw errorResponse

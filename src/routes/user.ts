@@ -12,4 +12,4 @@ userRoutes
         // .post("/users", createUserValidator,postOne)
         .put("/users/:id", authorize, adminAuthorization ,updateUserValidator,updateOne)
         .delete("/users/:id", authorize, adminAuthorization,deleteOne)
-        .get("/users/:id", authorize,getOneById)
+        .get("/users/:id", authorize, adminAuthorization,getOneById)
