@@ -28,20 +28,20 @@ export const getUser = async (id:number): Promise<User | null> =>{
         throw errorResponse
     }
 }
-export const createUser = async (user: UserInput): Promise<User | null> =>{
-    try {
-        const existUser = await User.findOne({where: {email : user.email}})
-        if(existUser){
-            const errorResponse : ErrorResponse = {status: 400, message: "Email Is Already Exist"}
-            throw errorResponse
-        }
-        const response = await User.create(user)
-        return response
-    } catch (error: any) {
-        const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
-        throw errorResponse
-    }
-}
+// export const createUser = async (user: UserInput): Promise<User | null> =>{
+//     try {
+//         const existUser = await User.findOne({where: {email : user.email}})
+//         if(existUser){
+//             const errorResponse : ErrorResponse = {status: 400, message: "Email Is Already Exist"}
+//             throw errorResponse
+//         }
+//         const response = await User.create(user)
+//         return response
+//     } catch (error: any) {
+//         const errorResponse : ErrorResponse = {status: error?.status || 500, message: error?.message || "Server Error"}
+//         throw errorResponse
+//     }
+// }
 export const updateUser = async (id: number, user: UserInput): Promise<User| null> =>{
     try {
         const foundUser = await User.findByPk(id)
