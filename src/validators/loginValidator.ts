@@ -2,7 +2,7 @@ import { check } from "express-validator";
 import { NextFunction, Request, Response } from "express";
 import { validateResult } from "../utils/validateResult";
 
-export const createUserValidator = [
+export const loginValidator = [
     check('email')
         .exists()
         .notEmpty()
