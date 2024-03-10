@@ -4,13 +4,14 @@ import { updateBookingValidator } from '../validators/updateBookingValidator';
 import { createBookingValidator } from "../validators/createBookingValidator";
 import { authorize } from "../middlewares/authorize";
 import { adminAuthorization } from "../middlewares/adminAuthorization";
+import { isAdminOrEmployee } from "../middlewares/adminEmployeeAuthorization";
 
 export const bookingRouter = Router()
 
 bookingRouter
-        .get("/bookings", getAll)
+        .get("/bookings", authorize,isAdminOrEmployee,getAll)
         .post("/bookings", authorize,createBookingValidator,postOne)
-        .put("/bookings/:id", authorize, adminAuthorization ,updateBookingValidator,updateOne)
-        .delete("/bookings/:id", deleteOne)
-        .get("/bookings/ocupation", getAllOcupation)
-        .get("/bookings/:id", getOneById)
+        .put("/bookings/:id", authorize, isAdminOrEmployee,updateBookingValidator,updateOne)
+        .delete("/bookings/:id", authorize, isAdminOrEmployee,deleteOne)
+        .get("/bookings/ocupation", authorize,isAdminOrEmployee,getAllOcupation)
+        .get("/bookings/:id", authorize,getOneById)
