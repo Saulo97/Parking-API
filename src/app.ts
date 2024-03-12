@@ -9,8 +9,8 @@ import './models/parkingPlace'
 import './models/booking'
 
 
-const PORT = process.env.PORT || 3000
-const app = express()
+export const PORT = process.env.PORT || 3000
+export const app = express()
 
 app.use(cors())
 app.use(json())
@@ -29,3 +29,4 @@ const main = async () =>{
 }
 
 main()
+
