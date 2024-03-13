@@ -41,6 +41,9 @@ export const updateOne = async (req: Request, res: Response): Promise<void> => {
         const id = +req.params.id
         if(!id || typeof id !== "number" ) throw {status: 400, message: "Error In Param Id "}
         const {name, email, password, rol} = req.body
+        if(!email && !name && !password && !rol){
+            throw {status: 404, message: "Request Body is Empty"}
+        }
         const newUser: UserInput = {
             name: name,
             email: email,
