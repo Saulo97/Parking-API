@@ -126,7 +126,7 @@ describe('Bookings test',()=>{
             }
             const response = await api.post('/bookings').send(newBooking)
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
         })
         it('create new booking failed because start-date is after end-date',async()=>{
             const newBooking: BookingInput = {
@@ -209,13 +209,13 @@ describe('Real Time ocupation tests',()=>{
             const resToken = await api.post('/login').send({email: userNotEmployee.email, password: userNotEmployee.password})
             const response = await api.get('/bookings/ocupation').auth(`${resToken.body}`,{type: 'bearer'}).send()
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
             
         })
         it('error to returns parking ocupated because user is not authenticate',async()=>{
             const response = await api.get('/bookings/ocupation').send()
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
             
         })
     })
@@ -266,7 +266,7 @@ describe('User update tests by admin',()=>{
             const clientTokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
             const response = await api.put(`/users/${id}`).auth(`${clientTokenRes.body}`,{type:'bearer'}).send(userUpdated)
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
         })
         it('error in user update by user is not authenticated',async()=>{
             const userResponse = await api.post('/register').send(newUser)
@@ -276,7 +276,7 @@ describe('User update tests by admin',()=>{
             }
             const response = await api.put(`/users/${id}`).send(userUpdated)
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
         })
         it('fail user update by admin because req.body is empty',async()=>{
             const userResponse = await api.post('/register').send(newUser)
@@ -353,13 +353,13 @@ describe('Get Logs only for admin tests',()=>{
         it('get all Logs failed by user is not authenticated',async()=>{
             const response = await api.get('/logs').send()
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
         })
         it('get all Logs failed by user has not authorization',async()=>{
             const adminTokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
             const response = await api.get('/logs').auth(`${adminTokenRes.body}`, {type: 'bearer'}).send()
             expect(response.status).toBe(401)
-            expect(response.body.message).toBeDefined()
+            expect(response.body.error).toBeDefined()
         })
     })
     afterAll(async()=>{
