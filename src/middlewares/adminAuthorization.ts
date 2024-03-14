@@ -6,12 +6,12 @@ export const adminAuthorization = async ( req: Request, res: Response, next: Nex
     try {
         const {rol} = req.body.user
         if(rol !== Roles.admin){
-            const errorResponse : ErrorResponse = {status: 401, message: "This User has not permission"}
+            const errorResponse = {status: 401, error: "This User has not permission"}
             return res.status(401).json(errorResponse)  
         }
         next()
     } catch (error) {
-        const errorResponse : ErrorResponse = {status: 401, message: "This User has not permission"}
+        const errorResponse = {status: 401, error: "This User has not permission"}
         return res.status(401).json(errorResponse)
     }
 }
