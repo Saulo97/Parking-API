@@ -21,6 +21,9 @@ export const getUser = async (id:number): Promise<User | null> =>{
         if(!response || response === null || response === undefined){
             const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
             throw errorResponse
+        }if(response.isDeleted == true){
+            const errorResponse : ErrorResponse = {status: 404, message: "This User is not exist"}
+            throw errorResponse
         }
         return response
     } catch (error: any) {
@@ -48,6 +51,9 @@ export const updateUser = async (id: number, user: UserInput): Promise<User| nul
         if(!foundUser){
             const errorResponse : ErrorResponse = {status: 404, message: "User Not Found By Id"}
             throw errorResponse 
+        }if(foundUser.isDeleted == true){
+            const errorResponse : ErrorResponse = {status: 404, message: "This User is not exist"}
+            throw errorResponse
         }else{
             foundUser.name = user.name ?? foundUser.name
             foundUser.email = user.email ?? foundUser.email
