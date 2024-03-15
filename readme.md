@@ -102,7 +102,28 @@ Para acceder a la interfaz ejecutamos el proyecto con el anterior comando y acce
 ~~~
 http://localhost:3000/api-doc/
 ~~~
+## Auth
+En algunos casos hay endpoints que necesitan autorizacion.
+Para ello se ha creado algunos usuarios en base dea datos para poder probar el correcto funcionamiento de estos endpoints:
 
-
+Admin
 ***
+{
+    email: admin@gmail.com
+    password: 123456
+}
+***
+Employee
+***
+{
+    email: employee@gmail.com
+    password: 123456
+}
+***
+Client
+***
+{
+    email: client@gmail.com
+    password: 123456
+}
 ***
