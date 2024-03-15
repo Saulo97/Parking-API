@@ -5,6 +5,7 @@
 El API permite a los usuarios registrados como clientes, hacer una reserva de una plaza de parqueo en una fecha y hora determinada. En caso de que dicha reserva sea en un horario en el que todas las plazas de parqueo estan reservadas ya previamente, el usuario recivirá una respuesta negativa y no podrá hacer esta reserva.
 También es posible crear, leer, actualizar y eliminar nuevas plazas de parqueo por parte de los usuarios que esten registrados como empleados, así como constultar en tiempo real cual es el estado de ocupación del parqueo.
 Para los usuarios registrados como admin, existe la posibilidad de modificar y/o eliminar los usuarios existentes en la base de datos y además tienen la posibilidad de acceder a un registro de logs relacionados con la creacion, modificacion y eliminacion de las reservas de las plazas de parqueo.
+Este proyecto es la solución a una prueba técnica para una vacante como backend developer. Todos los detalles de la prueba y requerimientos los puede encontrar [aquí](https://github.com/Saulo97/Parking-API/blob/main/API-parking.pdf)
 
 ### Que podemos ver en este proyecto:
 
