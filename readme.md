@@ -2,7 +2,7 @@
 ### API para la gestión de un parking. Desarrollada con Typescript y el framework para backends de NodeJS, Express.
 
 
-## Este proyecto es la solución a una prueba técnica para una vacante como backend developer. Todos los detalles de la prueba y requerimientos los puede encontrar [aquí](https://github.com/Saulo97/Parking-API/blob/main/API-parking.pdf)
+#### Este proyecto es la solución a una prueba técnica para una vacante como backend developer. Todos los detalles de la prueba y requerimientos los puede encontrar [aquí](https://github.com/Saulo97/Parking-API/blob/main/API-parking.pdf)
 
 
 ### Sobre que es el proyecto:
