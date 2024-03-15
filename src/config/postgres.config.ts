@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize";
+import 'dotenv/config'
 const {NODE_ENV, NAME_DB_PG_TEST, NAME_DB_PG} = process.env
 const nameDB = NODE_ENV === 'test'? NAME_DB_PG_TEST! : NAME_DB_PG! 
 const userDB = process.env.USER_DB_PG || "postgres"
