@@ -33,9 +33,17 @@ authRouter
          *                      content:
          *                              application/json:
          *                                      schema:
-         *                                              $ref: '#/components/schemas/ApiErrorValidationResponse'
+         *                                              type: array
+         *                                              items:
+         *                                                      $ref: '#/components/schemas/ApiErrorValidationResponse'
          *              404:
          *                      description: User Not Found
+         *                      content:
+         *                              application/json:
+         *                                      schema:
+         *                                              $ref: '#/components/schemas/ApiErrorResponse'
+         *              500:
+         *                      description: Internal Server Error
          *                      content:
          *                              application/json:
          *                                      schema:
@@ -63,15 +71,23 @@ authRouter
          *                      content:
          *                              application/json:
          *                                      schema:
-         *                                              $ref: '#/components/schemas/ApiResponse'
+         *                                              $ref: '#/components/schemas/User'
          *              403:
          *                      description: Error in request body
          *                      content:
          *                              application/json:
          *                                      schema:
-         *                                              $ref: '#/components/schemas/ApiErrorValidationResponse'
+         *                                              type: array
+         *                                              items:
+         *                                                      $ref: '#/components/schemas/ApiErrorValidationResponse'
          *              404:
          *                      description: User Not Found
+         *                      content:
+         *                              application/json:
+         *                                      schema:
+         *                                              $ref: '#/components/schemas/ApiErrorResponse'
+         *              500:
+         *                      description: Internal Server Error
          *                      content:
          *                              application/json:
          *                                      schema:

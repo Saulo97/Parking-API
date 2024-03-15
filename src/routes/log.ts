@@ -23,7 +23,9 @@ logRoutes.get('/logs', authorize, adminAuthorization, getAll)
          *                      content:
          *                              application/json:
          *                                      schema:
-         *                                              $ref: '#/components/schemas/ApiResponse'
+         *                                              type: array
+         *                                              items:
+         *                                                  $ref: '#/components/schemas/Log'
          *              401:
          *                      description: Error by User has Not authorization
          *                      content:

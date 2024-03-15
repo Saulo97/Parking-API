@@ -25,7 +25,9 @@ userRoutes
          *                              content:
          *                                      application/json:
          *                                              schema:
-         *                                                      $ref: '#/components/schemas/ApiResponse'
+         *                                                      type: array
+         *                                                      items:
+         *                                                              $ref: '#/components/schemas/User'
          *                      401:
          *                              description: User has not Authorization
          *                              content:
@@ -34,6 +36,12 @@ userRoutes
          *                                                      $ref: '#/components/schemas/ApiErrorAuthResponse'
          *                      404:
          *                              description: Users Not Found
+         *                              content:
+         *                                      application/json:
+         *                                              schema:
+         *                                                      $ref: '#/components/schemas/ApiErrorResponse'
+         *                      500:
+         *                              description: Internal Server Error
          *                              content:
          *                                      application/json:
          *                                              schema:
@@ -51,6 +59,13 @@ userRoutes
          *              description: Retorna un solo usuario editado solamente por un administrador
          *              security:
          *                      - bearerAuth: []
+         *              requestBody:
+         *                      description: Esquema de Actualizar Usuario
+         *                      required: true
+         *                      content:
+         *                              application/json:
+         *                                      schema: 
+         *                                              $ref: '#/components/schemas/UserInput'
          *              parameters:
          *                      - name: id
          *                        in: path
@@ -63,13 +78,21 @@ userRoutes
          *                              content:
          *                                      application/json:
          *                                              schema:
-         *                                                      $ref: '#/components/schemas/ApiResponse'
+         *                                                      $ref: '#/components/schemas/User'
          *                      401:
          *                              description: Error by User has Not authorization
          *                              content:
          *                                      application/json:
          *                                              schema:
          *                                                      $ref: '#/components/schemas/ApiErrorAuthResponse'
+         *                      403:
+         *                              description: Error in request body
+         *                              content:
+         *                                      application/json:
+         *                                              schema:
+         *                                                      type: array
+         *                                                      items:
+         *                                                              $ref: '#/components/schemas/ApiErrorValidationResponse'
          *                      404:
          *                              description: Error by Usernot found
          *                              content:
@@ -108,7 +131,7 @@ userRoutes
          *                              content:
          *                                      application/json:
          *                                              schema:
-         *                                                      $ref: '#/components/schemas/ApiResponse'
+         *                                                      $ref: '#/components/schemas/User'
          *                      401:
          *                              description: User has not Authorization
          *                              content:
@@ -117,6 +140,12 @@ userRoutes
          *                                                      $ref: '#/components/schemas/ApiErrorAuthResponse'
          *                      404:
          *                              description: Users Not Found
+         *                              content:
+         *                                      application/json:
+         *                                              schema:
+         *                                                      $ref: '#/components/schemas/ApiErrorResponse'
+         *                      500:
+         *                              description: Internal Server Error
          *                              content:
          *                                      application/json:
          *                                              schema:
@@ -140,20 +169,13 @@ userRoutes
          *                        required: true
          *                        schema:
          *                              type: integer
-         *              requestBody:
-         *                      description: Esquema de Login
-         *                      required: true
-         *                      content:
-         *                              application/json:
-         *                                      schema:
-         *                                              $ref: '#/components/schemas/Auth' 
          *              responses:
          *                      200:
          *                              description: Succeful user return
          *                              content:
          *                                      application/json:
          *                                              schema:
-         *                                                      $ref: '#/components/schemas/ApiResponse'
+         *                                                      $ref: '#/components/schemas/User'
          *                      401:
          *                              description: Error by User has Not authorization
          *                              content:

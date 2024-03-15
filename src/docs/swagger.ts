@@ -27,16 +27,16 @@ const swaggerDefinition: OAS3Definition = {
                     },
                     name: {
                         type: 'string',
-                        example: 'Perico'
+                        example: 'Admin'
                     },
                     email: {
                         type: 'string',
                         format: 'email',
-                        example: 'perico1@gmail.com'
+                        example: 'admin@gmail.com'
                     },
                     password: {
                         type: 'string',
-                        example: '123456'
+                        example: '123546'
                     },
                     rol: {
                         type: 'string',
@@ -55,12 +55,12 @@ const swaggerDefinition: OAS3Definition = {
                 properties:{
                     name: {
                         type: 'string',
-                        example: 'Perico'
+                        example: 'Client'
                     },
                     email: {
                         type: 'string',
                         format: 'email',
-                        example: 'newuser@gmail.com'
+                        example: 'client@gmail.com'
                     },
                     password: {
                         type: 'string',
@@ -68,7 +68,7 @@ const swaggerDefinition: OAS3Definition = {
                     },
                     rol: {
                         type: 'string',
-                        example: 'admin',
+                        example: 'client',
                         description: 'Lo roles validos son admin, client o employee'
                     }
                 }
@@ -141,7 +141,7 @@ const swaggerDefinition: OAS3Definition = {
                     }
                 }
             },
-            ParkingPLace: {
+            ParkingPlace: {
                 type: 'object',
                 required: ['name'],
                 properties:{
@@ -180,9 +180,18 @@ const swaggerDefinition: OAS3Definition = {
             ApiErrorValidationResponse: {
                 type: 'object',
                 properties:{
-                    error: {
-                        type: 'array',
-                    }
+                    field: {
+                        type: 'string',
+                        example: 'field X'
+                    },
+                    value: {
+                        type: 'string',
+                        example: 'value X'
+                    },
+                    msg: {
+                        type: 'string',
+                        example: 'the field X has incorrect value'
+                    },
                 }
             },
             ApiErrorAuthResponse: {
