@@ -12,151 +12,7 @@ import { LogModel } from "../models/log";
 
 const api = supertest(app)
 
-describe('Bookings test',()=>{
-    const newUser: UserInput = {
-        name: "Test",
-        email: "test.perico@gmail.com",
-        password: "123456",
-        rol: Roles.client
-    }
-    const newAdmin: UserInput = {
-        name: "Test",
-        email: "test.admin@gmail.com",
-        password: "123456",
-        rol: Roles.admin
-    }
-    const newPlaceA: ParkingPlaceInput = {
-        name: "placeTest"
-    }
-    const firstBooking: BookingInput = {
-        dateStart: "2024-05-20T10:00",
-        dateEnd:"2024-05-20T10:30"
-    }
-    const secondBooking: BookingInput = {
-        dateStart: "2024-05-20T12:00",
-        dateEnd:"2024-05-20T12:30"
-    }
-    beforeAll(async()=>{
-        // const userResponse = await api.post('/register').send(newUser)
-        await api.post('/register').send(newAdmin)
-        await api.post('/register').send(newUser)
-        const adminTokenRes = await api.post('/login').send({email: newAdmin.email, password: newAdmin.password})
-        await api.post('/parkings').auth(`${adminTokenRes.body}`,{type:"bearer"}).send(newPlaceA)
-        const userTokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-        await api.post('/bookings').auth(`${userTokenRes.body}`,{type:'bearer'}).send(firstBooking)
-        await api.post('/bookings').auth(`${userTokenRes.body}`,{type:'bearer'}).send(secondBooking)
-    })  
-    describe('create a new Booking ',()=>{
-        it('create new booking before all bookings',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T09:00",
-                dateEnd: "2024-05-20T09:00"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(201)
-            expect(response.body.id).toBeDefined()
-            expect(response.body.dateStart).toBe(newBooking.dateStart)
-            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
-            expect(response.body.userId).toBeGreaterThan(0)
-            expect(response.body.placeId).toBeGreaterThan(0)
-        })
-        it('create new booking after all bookings',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T23:00",
-                dateEnd: "2024-05-21T00:10"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(201)
-            expect(response.body.id).toBeDefined()
-            expect(response.body.dateStart).toBe(newBooking.dateStart)
-            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
-            expect(response.body.userId).toBeGreaterThan(0)
-            expect(response.body.placeId).toBeGreaterThan(0)
-        })
-        it('create new booking between 2 test bookings',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T11:00",
-                dateEnd: "2024-05-20T11:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(201)
-            expect(response.body.id).toBeDefined()
-            expect(response.body.dateStart).toBe(newBooking.dateStart)
-            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
-            expect(response.body.userId).toBeGreaterThan(0)
-            expect(response.body.placeId).toBeGreaterThan(0)
-        })
-        it('create new booking failed by dateStart is ocuppated',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T12:10",
-                dateEnd: "2024-05-20T13:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(404)
-            expect(response.body.error).toBeDefined()
-        })
-        it('create new booking failed by dateEnd is ocuppated',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T22:10",
-                dateEnd: "2024-05-20T23:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(404)
-            expect(response.body.error).toBeDefined()
-        })
-        it('create new booking failed by time of booking is ocuppated by another booking',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T09:00",
-                dateEnd: "2024-05-20T11:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
-            expect(response.status).toBe(404)
-            expect(response.body.error).toBeDefined()
-        })
-        it('create new booking failed because user is not authenticated',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T08:00",
-                dateEnd: "2024-05-20T08:30"
-            }
-            const response = await api.post('/bookings').send(newBooking)
-            expect(response.status).toBe(401)
-            expect(response.body.error).toBeDefined()
-        })
-        it('create new booking failed because start-date is after end-date',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-05-20T010:00",
-                dateEnd: "2024-05-20T08:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type: 'bearer'}).send(newBooking)
-            expect(response.status).toBe(403)
-            expect(response.body.error).toBeDefined()
-        })
-        it('create new booking failed because start-date or end-date is before today or now',async()=>{
-            const newBooking: BookingInput = {
-                dateStart: "2024-01-01T010:00",
-                dateEnd: "2024-05-20T08:30"
-            }
-            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
-            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type: 'bearer'}).send(newBooking)
-            expect(response.status).toBe(403)
-            expect(response.body.error).toBeDefined()
-        })
-    })
-    afterAll(async()=>{
-        const client = await User.findOne({where:{email: newUser.email}})
-        await Booking.destroy({where:{userId: client?.id }})
-        await User.destroy({where:{name: newUser.name}})
-        await ParkingPlace.destroy({where: {name: newPlaceA.name}})
-        await LogModel.deleteMany()
-    })
-})
+
 describe('Real Time ocupation tests',()=>{
     const dateStart = new Date()
     dateStart.setHours(dateStart.getHours()-1)
@@ -457,6 +313,151 @@ describe('Users Auth test',()=>{
     })
     afterAll(async()=>{
         await User.destroy({where: {name: newUser.name}})
+        await LogModel.deleteMany()
+    })
+})
+describe('Bookings test',()=>{
+    const newUser: UserInput = {
+        name: "Test",
+        email: "test.perico@gmail.com",
+        password: "123456",
+        rol: Roles.client
+    }
+    const newAdmin: UserInput = {
+        name: "Test",
+        email: "test.admin@gmail.com",
+        password: "123456",
+        rol: Roles.admin
+    }
+    const newPlaceA: ParkingPlaceInput = {
+        name: "placeTest"
+    }
+    const firstBooking: BookingInput = {
+        dateStart: "2024-05-20T10:00",
+        dateEnd:"2024-05-20T10:30"
+    }
+    const secondBooking: BookingInput = {
+        dateStart: "2024-05-20T12:00",
+        dateEnd:"2024-05-20T12:30"
+    }
+    beforeAll(async()=>{
+        // const userResponse = await api.post('/register').send(newUser)
+        await api.post('/register').send(newAdmin)
+        await api.post('/register').send(newUser)
+        const adminTokenRes = await api.post('/login').send({email: newAdmin.email, password: newAdmin.password})
+        await api.post('/parkings').auth(`${adminTokenRes.body}`,{type:"bearer"}).send(newPlaceA)
+        const userTokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+        await api.post('/bookings').auth(`${userTokenRes.body}`,{type:'bearer'}).send(firstBooking)
+        await api.post('/bookings').auth(`${userTokenRes.body}`,{type:'bearer'}).send(secondBooking)
+    })  
+    describe('create a new Booking ',()=>{
+        it('create new booking before all bookings',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T09:00",
+                dateEnd: "2024-05-20T09:10"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(201)
+            expect(response.body.id).toBeDefined()
+            expect(response.body.dateStart).toBe(newBooking.dateStart)
+            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
+            expect(response.body.userId).toBeGreaterThan(0)
+            expect(response.body.placeId).toBeGreaterThan(0)
+        })
+        it('create new booking after all bookings',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T23:00",
+                dateEnd: "2024-05-21T00:10"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(201)
+            expect(response.body.id).toBeDefined()
+            expect(response.body.dateStart).toBe(newBooking.dateStart)
+            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
+            expect(response.body.userId).toBeGreaterThan(0)
+            expect(response.body.placeId).toBeGreaterThan(0)
+        })
+        it('create new booking between 2 test bookings',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T11:00",
+                dateEnd: "2024-05-20T11:30"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(201)
+            expect(response.body.id).toBeDefined()
+            expect(response.body.dateStart).toBe(newBooking.dateStart)
+            expect(response.body.dateEnd).toBe(newBooking.dateEnd)
+            expect(response.body.userId).toBeGreaterThan(0)
+            expect(response.body.placeId).toBeGreaterThan(0)
+        })
+        it('create new booking failed by dateStart is ocuppated',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T12:10",
+                dateEnd: "2024-05-20T13:30"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(404)
+            expect(response.body.error).toBeDefined()
+        })
+        it('create new booking failed by dateEnd is ocuppated',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T09:50",
+                dateEnd: "2024-05-20T10:20"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(404)
+            expect(response.body.error).toBeDefined()
+        })
+        it('create new booking failed by time of booking is ocuppated by another booking',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T09:00",
+                dateEnd: "2024-05-20T11:30"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type:'bearer'}).send(newBooking)
+            expect(response.status).toBe(404)
+            expect(response.body.error).toBeDefined()
+        })
+        it('create new booking failed because user is not authenticated',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T08:00",
+                dateEnd: "2024-05-20T08:30"
+            }
+            const response = await api.post('/bookings').send(newBooking)
+            expect(response.status).toBe(401)
+            expect(response.body.error).toBeDefined()
+        })
+        it('create new booking failed because start-date is after end-date',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-05-20T010:00",
+                dateEnd: "2024-05-20T08:30"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type: 'bearer'}).send(newBooking)
+            expect(response.status).toBe(403)
+            expect(response.body.error).toBeDefined()
+        })
+        it('create new booking failed because start-date or end-date is before today or now',async()=>{
+            const newBooking: BookingInput = {
+                dateStart: "2024-01-01T010:00",
+                dateEnd: "2024-05-20T08:30"
+            }
+            const tokenRes = await api.post('/login').send({email: newUser.email, password: newUser.password})
+            const response = await api.post('/bookings').auth(`${tokenRes.body}`,{type: 'bearer'}).send(newBooking)
+            expect(response.status).toBe(403)
+            expect(response.body.error).toBeDefined()
+        })
+    })
+    afterAll(async()=>{
+        const client = await User.findOne({where:{email: newUser.email}})
+        await Booking.destroy({where:{userId: client?.id }})
+        await User.destroy({where:{name: newUser.name}})
+        await ParkingPlace.destroy({where: {name: newPlaceA.name}})
         await LogModel.deleteMany()
     })
 })
